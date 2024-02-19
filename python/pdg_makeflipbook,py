@@ -34,6 +34,15 @@ def flipbookMaker(encode_to="mp4"):
     if os.path.exists('cancel.txt'):
         os.remove('cancel.txt')
 
+    output_directory = pdg.workItem().attrib("output_directory").asString()
+
+    # Get a list of all jpg files in the output directory
+    jpg_files = glob.glob(os.path.join(output_directory, '*.jpg'))
+
+    # Loop through the list and delete each file
+    for jpg_file in jpg_files:
+        os.remove(jpg_file)
+
     # Access the "camera" attribute as a string
     cams =  pdg.workItem().attribArray("camera")
     resolution_percentage = pdg.workItem().attribValue(name="resolution_percentage", index=0)
@@ -42,10 +51,10 @@ def flipbookMaker(encode_to="mp4"):
     # print(cams)
     
     use_note = hou.parm("../../if_overlay_text").eval()
+
     
     for cam in cams:
         # Get attributes from work item
-        output_directory = pdg.workItem().attrib("output_directory").asString() 
         output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(hou.node(cam).name())
         # Get custom text from node parameter and change line breaks to spaces
         custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name())
@@ -116,11 +125,14 @@ def flipbookMaker(encode_to="mp4"):
                 input_frame_path = os.path.normpath(input_frame_path)
                 output_frame_path = os.path.normpath(output_frame_path)
     
+                # Calculate point size based on resolution percentage
+                point_size = int(30 * resolution_percentage)
+
                 imagemagick_command = [
                     "magick",
                     input_frame_path,
                     "-font", "Arial",
-                    "-pointsize", "30",
+                    "-pointsize", str(point_size),  # Use the calculated point size
                     "-fill", "white",  # Set text color to white
                     "-gravity", "southeast",  # Set gravity to bottom right
                     "-annotate", "+10+10",  # Set position to bottom right with a margin of 10 pixels
