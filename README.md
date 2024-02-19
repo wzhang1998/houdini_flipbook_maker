@@ -19,6 +19,8 @@ To add the `object_Wenyi.flipbook_maker.1.1.hdanc` to your Houdini project, foll
 
 The plugin provides the following functions:
 
+![Snipaste_2024-02-18_22-34-12](https://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/17257050-cd27-4485-b477-b0e6591e4968)
+
 - Render multiple cameras at once: You can select multiple cameras and render them simultaneously.
 - Support for multiple resolutions: You can choose different resolutions: 100% 50% 75% 25%.
 - Overlay text: The plugin adds overlay text to the rendered frames, displaying the camera name, frame number, and any additional notes.
