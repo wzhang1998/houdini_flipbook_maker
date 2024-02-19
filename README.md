@@ -4,7 +4,7 @@ A plugin for Houdini that allows you to render multiple cameras at once, support
 
 ## Usage
 
-Before using this plugin, make sure you have installed `ffmpeg` and `ImageMagick` on your system.
+Before using this plugin, make sure you have installed [ffmpeg](https://ffmpeg.org/) and [ImageMagick](https://imagemagick.org/) on your system.
 
 To add the `object_Wenyi.flipbook_maker.1.1.hdanc` to your Houdini project, follow these steps:
 
