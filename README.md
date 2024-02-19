@@ -1,6 +1,7 @@
 # Houdini Flipbook Maker
 
 A plugin for Houdini that allows you to render multiple cameras at once, supports multiple resolutions, adds overlay text for camera/frame/notes, and exports the output in GIF or MP4 format.
+Inspired by Danny Laursen's [Houdini Easy Flipbook HDA](https://dannylrsn.gumroad.com/l/lfgcnh)
 
 ## Usage
 
