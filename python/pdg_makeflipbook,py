@@ -128,19 +128,29 @@ def flipbookMaker(encode_to="mp4"):
                 # Calculate point size based on resolution percentage
                 point_size = int(30 * resolution_percentage)
 
+                # Create a STARTUPINFO object
+                startupinfo = subprocess.STARTUPINFO()
+
+                # Set the STARTF_USESHOWWINDOW flag
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+                # Set the wShowWindow field to SW_HIDE
+                startupinfo.wShowWindow = subprocess.SW_HIDE
+
                 imagemagick_command = [
                     "magick",
                     input_frame_path,
                     "-font", "Arial",
-                    "-pointsize", str(point_size),  # Use the calculated point size
-                    "-fill", "white",  # Set text color to white
-                    "-gravity", "southeast",  # Set gravity to bottom right
-                    "-annotate", "+10+10",  # Set position to bottom right with a margin of 10 pixels
-                    f'{frame_text}',  # Adjust text positioning
+                    "-pointsize", str(point_size),
+                    "-fill", "white",
+                    "-gravity", "southeast",
+                    "-annotate", "+10+10",
+                    f'{frame_text}',
                     output_frame_path
                 ]
-                result = subprocess.run(imagemagick_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+                # Pass the startupinfo object to the subprocess.run function
+                result = subprocess.run(imagemagick_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=startupinfo)
     
                 # If the command failed, print the error
                 if result.returncode != 0:
