@@ -54,8 +54,9 @@ def flipbookMaker(encode_to="mp4"):
 
     
     for cam in cams:
+
         # Get attributes from work item
-        output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(hou.node(cam).name())
+        output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(hou.node(cam).name()) + "_v" +  hou.parm("../../versions").evalAsString()
         # Get custom text from node parameter and change line breaks to spaces
         custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name())
 
