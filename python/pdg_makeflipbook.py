@@ -51,6 +51,32 @@ def flipbookMaker(encode_to="mp4"):
     # print(cams)
     
     use_note = hou.parm("../../if_overlay_text").eval()
+    add_viewport_cam = hou.parm("../../add_viewport_cam").eval()
+
+    if add_viewport_cam == 1:
+        # Get the current viewport
+        pane = hou.ui.paneTabOfType(hou.paneTabType.SceneViewer)
+        viewport = pane.curViewport()
+
+        # Check if a viewport camera already exists
+        existing_cam = hou.node("/obj/cam_viewport")
+        if existing_cam is not None:
+            # If it does, delete it
+            existing_cam.destroy()
+
+        # Create a new camera
+        new_cam = hou.node("/obj").createNode("cam", "cam_viewport")
+
+        # Set the camera's view transform to the current view transform
+        new_cam.setParms({"tx": viewport.viewTransform().extractTranslates()[0],
+                        "ty": viewport.viewTransform().extractTranslates()[1],
+                        "tz": viewport.viewTransform().extractTranslates()[2],
+                        "rx": viewport.viewTransform().extractRotates()[0],
+                        "ry": viewport.viewTransform().extractRotates()[1],
+                        "rz": viewport.viewTransform().extractRotates()[2]})
+
+        # Add the new camera to the beginning of the cams list
+        cams.insert(0, new_cam.path())
 
     
     for cam in cams:
@@ -58,7 +84,7 @@ def flipbookMaker(encode_to="mp4"):
         # Get attributes from work item
         output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(hou.node(cam).name()) + "_v" +  hou.parm("../../versions").evalAsString()
         # Get custom text from node parameter and change line breaks to spaces
-        custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name())
+        custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name()) + " v" +  hou.parm("../../versions").evalAsString()
 
 
         # Get camera resolution
