@@ -235,5 +235,8 @@ else:
 
 flipbookMaker(encode_to=encode_format)
 
+# Display a message when the flipbook render is finished
+hou.ui.displayMessage("Flipbook render finished.")
+
 
 
