@@ -6,8 +6,9 @@ Inspired by Danny Laursen's [Houdini Easy Flipbook HDA](https://dannylrsn.gumroa
 ## Usage
 
 Before using this plugin, make sure you have installed [ffmpeg](https://ffmpeg.org/) and [ImageMagick](https://imagemagick.org/) on your system.
+Download the HDA file from the latest release in the plugin repository.
 
-To add the `object_Wenyi.flipbook_maker.1.1.hdanc` to your Houdini project, follow these steps:
+To add the `object_Wenyi.flipbook_maker.1.3.hdanc` to your Houdini project, follow these steps:
 
 1. Download the HDA file from the plugin repository.
 2. Open your Houdini project.

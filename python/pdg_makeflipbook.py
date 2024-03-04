@@ -192,7 +192,10 @@ def flipbookMaker(encode_to="mp4"):
                 # If the command failed, print the error
                 if result.returncode != 0:
                     print(result.stderr.decode())
-        
+                else:
+                    # If the command succeeded, delete the original jpg file
+                    os.remove(input_frame_path)
+            
             # Set output path for frames with text overlay
             output_frames_path_text = output_frames_path.replace(".jpg", "_text.jpg")
             
