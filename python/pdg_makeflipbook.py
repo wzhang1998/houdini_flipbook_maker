@@ -5,12 +5,14 @@ import glob
 import shlex
 
 def encodeVideo(input_path, output_path, framerate=24, codec="libx264", overlay_text=""):
-    # # Create a dummy Fontconfig configuration file
-    # with open("dummy.conf", "w") as file:
-    #     file.write("<fontconfig></fontconfig>")
-
-    # Set the FONTCONFIG_FILE environment variable
-    # os.environ["FONTCONFIG_PATH"] = "C:/Windows/Fonts"
+    # Check if the output file exists
+    if os.path.exists(output_path):
+        try:
+            # If it does, try to delete it
+            os.remove(output_path)
+        except PermissionError:
+            print(f"Cannot overwrite {output_path} because it is currently in use. Please close any programs that might be using this file and try again.")
+            return
 
     # Run ffmpeg command to encode video
     ffmpeg_command = [
@@ -51,7 +53,10 @@ def flipbookMaker(encode_to="mp4"):
     # print(cams)
     
     use_note = hou.parm("../../if_overlay_text").eval()
+    note_size = hou.parm("../../note_size").evalAsInt()
+    note_position = hou.parm("../../note_position").evalAsString()
     add_viewport_cam = hou.parm("../../add_viewport_cam").eval()
+    encode_video = hou.parm("../../encode_video").eval()
 
     if add_viewport_cam == 1:
         # Get the current viewport
@@ -80,12 +85,17 @@ def flipbookMaker(encode_to="mp4"):
 
     
     for cam in cams:
+        cam_node = hou.node(cam)
+        if cam_node is not None:
 
-        # Get attributes from work item
-        output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(hou.node(cam).name()) + "_v" +  hou.parm("../../versions").evalAsString()
-        # Get custom text from node parameter and change line breaks to spaces
-        custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name()) + " v" +  hou.parm("../../versions").evalAsString()
-
+            # Set output filename for flipbook frames
+            output_filename = pdg.workItem().attrib("output_filename").asString() + "_" + str(cam_node.name()) + "_v" +  hou.parm("../../versions").evalAsString()
+             # Get custom text from node parameter and change line breaks to spaces
+            custom_text = "Note:" + hou.parm("../../overlay_text").evalAsString() + "\n" + str(hou.node(cam).name()) + " v" +  hou.parm("../../versions").evalAsString()
+        else:
+            print(f"Camera node {cam} does not exist.")
+            break
+       
 
         # Get camera resolution
         cam = hou.node(cam)
@@ -153,7 +163,7 @@ def flipbookMaker(encode_to="mp4"):
                 output_frame_path = os.path.normpath(output_frame_path)
     
                 # Calculate point size based on resolution percentage
-                point_size = int(30 * resolution_percentage)
+                point_size = int(note_size * resolution_percentage)
 
                 # Create a STARTUPINFO object
                 startupinfo = subprocess.STARTUPINFO()
@@ -170,7 +180,7 @@ def flipbookMaker(encode_to="mp4"):
                     "-font", "Arial",
                     "-pointsize", str(point_size),
                     "-fill", "white",
-                    "-gravity", "southeast",
+                    "-gravity", note_position,  # Use the note_position parameter here
                     "-annotate", "+10+10",
                     f'{frame_text}',
                     output_frame_path
@@ -189,25 +199,26 @@ def flipbookMaker(encode_to="mp4"):
         else:
              output_frames_path_text = output_frames_path
 
-       # Choose video format based on user input
-        if encode_to == "mp4":
-            mp4_output_path = output_directory + output_filename + ".mp4"
-            encodeVideo( output_frames_path_text, mp4_output_path, overlay_text = custom_text)
-        elif encode_to == "gif":
-            gif_output_path = output_directory + output_filename + ".gif"
-            encodeVideo( output_frames_path_text, gif_output_path, codec="gif", overlay_text = custom_text)
-        else:
-            print("Invalid output format specified. Please choose 'mp4' or 'gif'.")
-    
-        # Optionally, clean up individual frames
-        jpg_files = glob.glob(os.path.join(output_directory, output_filename + '*.jpg'))
+        if encode_video == 1:
+        # Choose video format based on user input
+            if encode_to == "mp4":
+                mp4_output_path = output_directory + output_filename + ".mp4"
+                encodeVideo( output_frames_path_text, mp4_output_path, overlay_text = custom_text)
+            elif encode_to == "gif":
+                gif_output_path = output_directory + output_filename + ".gif"
+                encodeVideo( output_frames_path_text, gif_output_path, codec="gif", overlay_text = custom_text)
+            else:
+                print("Invalid output format specified. Please choose 'mp4' or 'gif'.")
+        
+            # Optionally, clean up individual frames
+            jpg_files = glob.glob(os.path.join(output_directory, output_filename + '*.jpg'))
 
-        # Iterate over the list of files and delete each one
-        for jpg_file in jpg_files:
-            try:
-                os.remove(jpg_file)
-            except Exception as e:
-                print(f"Error deleting {jpg_file}: {e}")
+            # Iterate over the list of files and delete each one
+            for jpg_file in jpg_files:
+                try:
+                    os.remove(jpg_file)
+                except Exception as e:
+                    print(f"Error deleting {jpg_file}: {e}")
 
 # Get the value of the output format parameter
 encode_format_value = hou.parm("../../output_format").eval()
