@@ -20,9 +20,8 @@ To add the `object_Wenyi.flipbook_maker.1.1.hdanc` to your Houdini project, foll
 
 The plugin provides the following functions: 
 
-<img src="https://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/cd36f7bd-ae72-46c3-b41a-e3543e7b903c" width='600'>\
-<img src="httpsttps://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/17257050-cd27-4485-b477-b0e6591e4968" width='600'>\
-<img src="httpsttps://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/3b3fadec-89f5-4d41-b643-ae4cfc139e6a" width='600'>
+<img src="https://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/b52efa24-7421-47c2-864d-d7a1d7de3871" width='700'>\
+<img src="https://github.com/wzhang1998/houdini_flipbook_maker/assets/67906283/d3625a24-6352-411a-a3a9-0216136627e9" width='700'>
 
 - Generate flipbooks from one or multiple cameras.
 - Add a text overlay to each frame: suport versioning and notes.
